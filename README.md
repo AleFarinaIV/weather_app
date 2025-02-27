@@ -1,5 +1,10 @@
-# Vue 3 + Vite
+# Weather App
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Una web app meteo responsive sviluppata con Vue.js. Questa applicazione permette agli utenti di consultare le previsioni meteo in tempo reale, visualizzando informazioni come temperatura, condizioni atmosferiche, umidità e molto altro. La webapp è progettata per essere compatibile con tutti i dispositivi, offrendo una visualizzazione ottimale su schermi di dimensioni diverse.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Funzionalità
+
+- Visualizzazione delle previsioni meteo in tempo reale.
+- Dettagli sulla temperatura, umidità, e condizioni atmosferiche.
+- Responsive, adatta a dispositivi mobile, tablet e desktop.
+- Integrazione con una API meteo per ottenere i dati più accurati.
