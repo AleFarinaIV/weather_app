@@ -6,7 +6,7 @@ export default {
 
 <template>
 
-    <div class="container bg-container py-2 px-4">
+    <div class="container bg-container py-2 px-4 px-md-0">
         <div class="row p-2 header_bg rounded">
             <div class="col-12 d-flex align-items-center">
                 <div class="img_box">
