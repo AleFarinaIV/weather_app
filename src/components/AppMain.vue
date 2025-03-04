@@ -11,17 +11,17 @@ export default {
           <div class="jumbo_bg mb-3 rounded-4 text-white">
             <div class="col-12 jumbo_col">
               <div class="d-flex flex-column justify-content-between">
-                <h1 class="fw-bolder mt-2">04/03</h1>
+                <h1 class="fw-bolder">04/03</h1>
               </div>
               <div class="jumbo_box">
                 <img src="../assets/hottest-sun-nobg.png" alt="">
               </div>
             </div>
-            <div class="glass_effect border border-2 border-warning rounded-4 mb-3 p-1">
+            <div class="glass-effect">
               <h4 class="m-0">Current Weather</h4>
               <p class="mb-2">Hot Sun</p>
               <div class="col-12 d-flex">
-                <div class="border border-2 border-warning rounded-4">
+                <div class="glass_effect border border-2 border-warning rounded-4 mb-3">
                     <div class="d-flex p-0 py-2 text-center">
                       <div class="d-flex flex-column p-1 fs_small">
                         <p class="m-0">Wind Speed</p>
@@ -37,7 +37,7 @@ export default {
                       </div>
                     </div>
                 </div>
-                <div class="border border-2 border-warning rounded-4 d-flex flex-column justify-content-center mx-2">
+                <div class="glass_effect border border-2 border-warning rounded-4 mb-3 d-flex flex-column justify-content-center mx-2">
                   <p class="m-0 fs-1 fw-bolder px-3">38°</p>
                 </div>
               </div>
