@@ -153,13 +153,6 @@ export default {
   </header>
 
   <main>
-    <!-- Loader -->
-    <div>
-      <h1>Geolocation example</h1>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-      <p v-if="store.latitude && store.longitude">Latitude: {{ store.latitude }}, Longitude: {{ store.longitude }}</p>
-      <p v-if="store.loading">Loading location...</p>
-    </div>
     <AppMain />
   </main>
 
