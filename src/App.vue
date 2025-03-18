@@ -15,15 +15,15 @@ export default {
     this.getGeolocation();
   },
   // watch: {
-  //   // Usiamo un watcher per chiamare getWeatherData quando cambiano latitudine e longitudine
+  //   // Usiamo un watcher per chiamare getCurrentWeather quando cambiano latitudine e longitudine
   //   'store.latitude'(newVal) {
   //     if (newVal !== null && store.longitude !== null) {
-  //       this.getWeatherData();
+  //       this.getCurrentWeather();
   //     }
   //   },
   //   'store.longitude'(newVal) {
   //     if (newVal !== null && store.latitude !== null) {
-  //       this.getWeatherData();
+  //       this.getCurrentWeather();
   //     }
   //   }
   // },
@@ -43,7 +43,8 @@ export default {
             store.loading = false;
 
             this.getCity();
-            this.getWeatherData();
+            this.getCurrentWeather();
+            this.getDailyWeather()
           },
           (error) => {
             store.loading = false;
@@ -84,19 +85,22 @@ export default {
         console.warn("Latitudine e longitudine non disponibili.");
       }
     },
-    getWeatherData() {
+    // current weather function
+    getCurrentWeather() {
       if (store.latitude && store.longitude) {
-        console.log("getWeatherData chiamata!"); // Per vedere se la funzione parte
-        const apiLocation = `forecast?latitude=${store.latitude}&longitude=${store.longitude}&timezone=auto`;
-        const weatherValue = `${store.apiUrl}${apiLocation}${storeCurrent.currentApi}`;
-  
+        console.log("getCurrentWeather chiamata!"); // Per vedere se la funzione parte
+        const apiLocation = `forecast?latitude=${store.latitude}&longitude=${store.longitude}`;
+        const weatherValue = `${store.apiUrl}${apiLocation}${storeCurrent.currentApi}&timezone=auto`;
+        console.log(weatherValue);
+        
+        //API call
         axios.get(weatherValue).then((result) => {
           console.log("Risultato API:", result); // Per vedere cosa riceviamo
           if (result.data) {
             storeCurrent.valueArray = result.data.current;
             storeCurrent.unitsArray = result.data.current_units;
-            console.log("Dati salvati in store.valueArray:", storeCurrent.valueArray);
-            console.log("Dati salvati in store.unitsArray:", storeCurrent.unitsArray);
+            console.log("Dati salvati in storeCurrent.valueArray:", storeCurrent.valueArray);
+            console.log("Dati salvati in storeCurrent.unitsArray:", storeCurrent.unitsArray);
           } else {
             console.warn("Dati non trovati in result.data:", result.data);
           }
@@ -104,6 +108,30 @@ export default {
           console.error("Errore nella richiesta API: ", error);
         });
 
+      }
+    },
+    // daily weather function
+    getDailyWeather() {
+      if (store.latitude && store.longitude) {
+        console.log("getDailyWeather chiamata!"); // Per vedere se la funzione parte
+        const apiLocation = `forecast?latitude=${store.latitude}&longitude=${store.longitude}`;
+        const weatherValue = `${store.apiUrl}${apiLocation}${storeDaily.dailyApi}&timezone=auto`;
+        console.log(weatherValue);
+
+        // API call
+        axios.get(weatherValue).then((result) => {
+          console.log("Risultato API:", result);
+          if (result.data) {
+            storeDaily.valueArray = result.data.daily;
+            storeDaily.unitsArray = result.data.daily_units;
+            console.log("Dati salvati in storeDaily.valueArray:", storeDaily.valueArray);
+            console.log("Dati salvati in storeDaily.unitsArray:", storeDaily.unitsArray);
+          } else {
+            console.warn("Dati non trovati in result.data:", result.data);
+          }
+        }).catch((error) => {
+          console.error("Errore nella richiesta API: ", error);
+        });
       }
     }
   },
