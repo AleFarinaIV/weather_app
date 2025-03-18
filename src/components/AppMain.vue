@@ -1,10 +1,14 @@
 <script>
 import {store} from "../store.js"
+import {storeCurrent} from "../storeCurrent.js"
+import { storeDaily } from "../storeDaily.js";
 
 export default {
   data() {
     return {
       store,
+      storeCurrent,
+      storeDaily,
     }
   },
   mounted() {
@@ -21,7 +25,8 @@ export default {
         <div class="jumbo_bg mb-3 rounded-4 text-white">
           <div class="col-12 jumbo_col">
             <div class="d-flex flex-column justify-content-between">
-              <h1 class="fw-bolder mt-2">04/03</h1>
+              <h1 class="fw-bolder mt-2 mb-0">{{ store.city }}</h1>
+              <p class="fs-smallest">{{ store.dateOnly }}</p>
             </div>
             <div class="jumbo_box">
               <img src="../assets/hottest-sun-nobg.png" alt="">
@@ -35,15 +40,15 @@ export default {
                   <div class="d-flex p-0 py-2 text-center ms-3">
                     <div class="d-flex flex-column p-1 fs_small fs-md-3">
                       <p class="m-0">Wind Speed</p>
-                      <p class="m-0">{{ store.valueArray.wind_speed_10m }} {{ store.unitsArray.wind_speed_10m }}</p>
+                      <p class="m-0">{{ storeCurrent.valueArray.wind_speed_10m }} {{ storeCurrent.unitsArray.wind_speed_10m }}</p>
                     </div>
                     <div class="d-flex flex-column p-1 fs_small fs-md-3 mx-2">
                       <p class="m-0">Humidity</p>
-                      <p class="m-0">{{ store.valueArray.relative_humidity_2m }}{{ store.unitsArray.relative_humidity_2m }}</p>
+                      <p class="m-0">{{ storeCurrent.valueArray.relative_humidity_2m }}{{ storeCurrent.unitsArray.relative_humidity_2m }}</p>
                     </div>
                     <div class="d-flex flex-column p-1 fs_small fs-md-3 me-3">
-                      <p class="m-0">Wind Speed</p>
-                      <p class="m-0">{{ store.valueArray.cloud_cover }}{{ store.unitsArray.cloud_cover }}</p>
+                      <p class="m-0">Nuvole</p>
+                      <p class="m-0">{{ storeCurrent.valueArray.cloud_cover }}{{ storeCurrent.unitsArray.cloud_cover }}</p>
                     </div>
                   </div>
               </div>

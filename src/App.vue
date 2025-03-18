@@ -1,5 +1,7 @@
 <script>
 import {store} from "./store.js"
+import {storeCurrent} from "./storeCurrent.js"
+import { storeDaily } from "./storeDaily.js";
 import axios from 'axios'
 import AppHeader from "./components/AppHeader.vue";
 import AppMain from "./components/AppMain.vue";
@@ -30,6 +32,7 @@ export default {
       if ("geolocation" in navigator) {
         store.loading = true;
         const datetime = new Date();
+        store.dateOnly = datetime.toLocaleDateString();
         console.log(datetime);
 
         navigator.geolocation.getCurrentPosition(
@@ -85,15 +88,15 @@ export default {
       if (store.latitude && store.longitude) {
         console.log("getWeatherData chiamata!"); // Per vedere se la funzione parte
         const apiLocation = `forecast?latitude=${store.latitude}&longitude=${store.longitude}&timezone=auto`;
-        const weatherValue = `${store.apiUrl}${apiLocation}${store.currentApi}`;
+        const weatherValue = `${store.apiUrl}${apiLocation}${storeCurrent.currentApi}`;
   
         axios.get(weatherValue).then((result) => {
           console.log("Risultato API:", result); // Per vedere cosa riceviamo
           if (result.data) {
-            store.valueArray = result.data.current;
-            store.unitsArray = result.data.current_units;
-            console.log("Dati salvati in store.valueArray:", store.valueArray);
-            console.log("Dati salvati in store.unitsArray:", store.unitsArray);
+            storeCurrent.valueArray = result.data.current;
+            storeCurrent.unitsArray = result.data.current_units;
+            console.log("Dati salvati in store.valueArray:", storeCurrent.valueArray);
+            console.log("Dati salvati in store.unitsArray:", storeCurrent.unitsArray);
           } else {
             console.warn("Dati non trovati in result.data:", result.data);
           }
@@ -107,6 +110,8 @@ export default {
   data() {
     return {
       store,
+      storeCurrent,
+      storeDaily,
       errorMessage: null,
     }
   }
