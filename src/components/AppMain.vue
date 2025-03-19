@@ -68,71 +68,106 @@ export default {
       };
 
       return weatherIcons[code] || "❓";
+    },
+    getWeatherIconMoon(code) {
+      const moonIcons = {
+        0: "bi bi-moon-stars-fill",
+        1: "bi bi-cloud-moon-fill",
+        2: "bi bi-cloud-moon-fill",
+      };
+
+      return moonIcons[code] || "";
+    },
+    isDay() {
+      const isDay = storeCurrent.valueArray.is_day;
+      return isDay
     }
   },
   computed: {
     formattedDates() {
-    if (!storeDaily.valueArray || !storeDaily.valueArray.time) return [];
-    
-    return storeDaily.valueArray.time.map(dateStr => {
-      const dateObj = new Date(dateStr);
-      return isNaN(dateObj) ? dateStr : dateObj.toLocaleDateString("it-IT", {
-        month: "2-digit",
-        day: "2-digit"
+      if (!storeDaily.valueArray || !storeDaily.valueArray.time) return [];
+      
+      return storeDaily.valueArray.time.map(dateStr => {
+        const dateObj = new Date(dateStr);
+        return isNaN(dateObj) ? dateStr : dateObj.toLocaleDateString("it-IT", {
+          month: "2-digit",
+          day: "2-digit"
+        });
       });
-    });
-  }
+    }
   }
 }
 </script>
 
 <template>
 
-  <div class="container mt-3">
+  <div class="container">
     <div class="row p-2">
 
-      <div class="jumbo_bg mb-3 rounded-4 text-white">
-        <div class="col-12 jumbo_col">
+      <div class="col-12 text-center">
+        <div class="mb-3 rounded-4 text-white">
           <div class="d-flex flex-column justify-content-between">
-            <h1 class="fw-bolder mt-2 mb-0">{{ store.city }}</h1>
-            <p class="fs-smallest">{{ store.dateOnly.slice(0,5) }}</p>
-          </div>
-        </div>
+            <!-- <p class="fs-smallest mb-0">{{ store.dateOnly.slice(0,5) }}</p> -->
+            <p class="fs_50 fw-light mb-0">{{ store.city }}</p>
+            <div class="mb-3 mx-2">
+              <p class="m-0 fw-lighter fs_80 px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}°</p>
+              <!-- Giorno -->
+              <h4 v-if="isDay()" class="m-0">
+                <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }}</span>
+                {{ getWeatherIcons(storeCurrent.valueArray.weather_code) }}
+              </h4>
+              <!-- Notte -->
+              <h4 v-else class="m-0">
+                <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }} </span>
+                <i class="ms-2 fs-6" :class="getWeatherIconMoon(storeCurrent.valueArray.weather_code)"></i>
+              </h4>
 
-        <div class="glass-effect">
-          <h4 class="m-0">{{ getWeatherIcons(storeCurrent.valueArray.weather_code) }}</h4>
-          <p class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }}</p>
-          <div class="col-12 d-flex justify-content-between">
-            <div class="glass_effect border border-2 border-warning rounded-4 mb-3">
-                <div class="d-flex p-0 py-2 text-center ms-3">
-                  <div class="d-flex flex-column p-1 fs_small fs-md-3">
-                    <p class="m-0">Wind Speed</p>
-                    <p class="m-0">{{ storeCurrent.valueArray.wind_speed_10m }} {{ storeCurrent.unitsArray.wind_speed_10m }}</p>
-                  </div>
-                  <div class="d-flex flex-column p-1 fs_small fs-md-3 mx-2">
-                    <p class="m-0">Humidity</p>
-                    <p class="m-0">{{ storeCurrent.valueArray.relative_humidity_2m }}{{ storeCurrent.unitsArray.relative_humidity_2m }}</p>
-                  </div>
-                  <div class="d-flex flex-column p-1 fs_small fs-md-3 me-3">
-                    <p class="m-0">Nuvole</p>
-                    <p class="m-0">{{ storeCurrent.valueArray.cloud_cover }}{{ storeCurrent.unitsArray.cloud_cover }}</p>
-                  </div>
-                </div>
-            </div>
-            <div class="glass_effect border border-2 border-warning rounded-4 mb-3 d-flex flex-column justify-content-center mx-2">
-              <p class="m-0 fs-1 fw-bolder px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}°</p>
+              <div v-if="storeDaily.valueArray.temperature_2m_max && storeDaily.valueArray.temperature_2m_max.length > 0">
+                <span>MAX: {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[0]) }}&#xb0; </span><span>MIN: {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[0]) }}&#xb0;</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div v-for="date, index in formattedDates.slice(1)" class="col-4 p-1">
-        <div class="card">
-            <div class="card-body d-flex flex-column align-items-center p-0 py-2 text-center">
-              <p class="m-0">{{ date }}</p>
-              <p class="m-0">{{ getWeatherIcons(storeDaily.valueArray.weather_code[index + 1]) }}</p>
+      <div class="col-12 py-2 glass_effect rounded-4 text-white mb-3">
+        <div class="border-bottom fs_10">
+          <p class="mb-1">Previsioni della giornata</p>
+        </div>
+        <div class="mb-3">
+          <div class="d-flex p-0 py-2 text-center">
+            <div class="d-flex flex-column p-1 fs_small fs-md-3">
+              <p class="m-0">Wind Speed</p>
+              <p class="m-0">{{ storeCurrent.valueArray.wind_speed_10m }} {{ storeCurrent.unitsArray.wind_speed_10m }}</p>
+            </div>
+            <div class="d-flex flex-column p-1 fs_small fs-md-3 mx-2">
+              <p class="m-0">Humidity</p>
+              <p class="m-0">{{ storeCurrent.valueArray.relative_humidity_2m }}{{ storeCurrent.unitsArray.relative_humidity_2m }}</p>
+            </div>
+            <div class="d-flex flex-column p-1 fs_small fs-md-3 me-3">
+              <p class="m-0">Nuvole</p>
+              <p class="m-0">{{ storeCurrent.valueArray.cloud_cover }}{{ storeCurrent.unitsArray.cloud_cover }}</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="col-12 py-2 glass_effect rounded-4 text-white">
+        <div class="border-bottom fs_10">
+          <p class="mb-1"><i class="bi bi-calendar3"></i> Previsioni per la settimana</p>
+        </div>
+        <div class="row">
+          <div v-for="date, index in formattedDates.slice(1)" class="col-4 p-1">
+            <div class="glass_effect rounded-4">
+                <div class="border-bottom d-flex flex-column align-items-center p-0 py-2 text-center">
+                  <p class="m-0">{{ date }}</p>
+                  <p class="m-0" :class="isDay == 0 ? getWeatherIconMoon(storeDaily.valueArray.weather_code[index + 1]) : ''">{{ getWeatherIcons(storeDaily.valueArray.weather_code[index + 1]) }}</p>
+                  <p class="m-0"><i class="bi bi-arrow-up"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[index + 1]) }} <i class="bi bi-arrow-down"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[index + 1]) }}°</p>
+                </div>
+              </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -140,38 +175,23 @@ export default {
   
 </template>
 
-<style>
+<style scoped>
+
+.fs_10 {
+  font-size: 10px;
+}
+.fs_50 {
+  font-size: 34px;
+}
+
+.fs_80 {
+  font-size: 80px;
+}
 
 .glass_effect {
-  backdrop-filter: blur(30px);
-  box-shadow: -5px 0px 10px rgb(245, 213, 6);
+  backdrop-filter: blur(80px);
 }
 
-.jumbo_bg {
-  background-image: url("../assets/hot-cloud-cover-bg.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.jumbo_col {
-  position: relative;
-  height: 170px;
-
-  .jumbo_box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150px;
-    height: 150px;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-}
 
 .fs_small {
   font-size: 10px;
