@@ -2,6 +2,7 @@
 import {store} from "../store.js"
 import {storeCurrent} from "../storeCurrent.js"
 import { storeDaily } from "../storeDaily.js";
+import { storeHourly } from "../storeHourly.js";
 
 export default {
   data() {
@@ -9,6 +10,7 @@ export default {
       store,
       storeCurrent,
       storeDaily,
+      storeHourly
     }
   },
   mounted() {
@@ -94,7 +96,12 @@ export default {
           day: "2-digit"
         });
       });
-    }
+    },
+    // getHours() {
+    //   if (!storeHourly.valueArray || !storeHourly.valueArray.time) return [];
+
+    //   return storeHourly.valueArray.time.map(hour => hour.slice(11,13));
+    // }
   }
 }
 </script>
@@ -108,9 +115,9 @@ export default {
         <div class="mb-3 rounded-4 text-white">
           <div class="d-flex flex-column justify-content-between">
             <!-- <p class="fs-smallest mb-0">{{ store.dateOnly.slice(0,5) }}</p> -->
-            <p class="fs_50 fw-light mb-0">{{ store.city }}</p>
+            <p class="fs_34 fw-light mb-0">{{ store.city }}</p>
             <div class="mb-3 mx-2">
-              <p class="m-0 fw-lighter fs_80 px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}°</p>
+              <p class="m-0 fw-lighter fs_80 px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}&#xb0;</p>
               <!-- Giorno -->
               <h4 v-if="isDay()" class="m-0">
                 <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }}</span>
@@ -134,22 +141,16 @@ export default {
         <div class="border-bottom fs_10">
           <p class="mb-1">Previsioni della giornata</p>
         </div>
-        <div class="mb-3">
-          <div class="d-flex p-0 py-2 text-center">
-            <div class="d-flex flex-column p-1 fs_small fs-md-3">
-              <p class="m-0">Wind Speed</p>
-              <p class="m-0">{{ storeCurrent.valueArray.wind_speed_10m }} {{ storeCurrent.unitsArray.wind_speed_10m }}</p>
+        <!-- carosello ora per ora -->
+        <!-- <div class="d-flex">
+           <p v-for="hour, index in getHours" :key="index" class="me-2">
+            <div class="d-flex flex-column align-items-center me-2">
+              {{ hour }}
+              <h6 class="m-0">{{ getWeatherIcons(storeHourly.valueArray.weather_code) }}</h6>
+              <p>{{ Math.ceil(storeHourly.valueArray.temperature_2m) }}&#xb0;</p>
             </div>
-            <div class="d-flex flex-column p-1 fs_small fs-md-3 mx-2">
-              <p class="m-0">Humidity</p>
-              <p class="m-0">{{ storeCurrent.valueArray.relative_humidity_2m }}{{ storeCurrent.unitsArray.relative_humidity_2m }}</p>
-            </div>
-            <div class="d-flex flex-column p-1 fs_small fs-md-3 me-3">
-              <p class="m-0">Nuvole</p>
-              <p class="m-0">{{ storeCurrent.valueArray.cloud_cover }}{{ storeCurrent.unitsArray.cloud_cover }}</p>
-            </div>
-          </div>
-        </div>
+          </p>
+        </div> -->
       </div>
 
       <div class="col-12 py-2 glass_effect rounded-4 text-white">
@@ -157,7 +158,7 @@ export default {
           <p class="mb-1"><i class="bi bi-calendar3"></i> Previsioni per la settimana</p>
         </div>
         <div class="row">
-          <div v-for="date, index in formattedDates.slice(1)" class="col-4 p-1">
+          <div v-for="date, index in formattedDates.slice(1)" :key="index" class="col-4 p-1">
             <div class="glass_effect rounded-4">
                 <div class="border-bottom d-flex flex-column align-items-center p-0 py-2 text-center">
                   <p class="m-0">{{ date }}</p>
@@ -180,7 +181,7 @@ export default {
 .fs_10 {
   font-size: 10px;
 }
-.fs_50 {
+.fs_34 {
   font-size: 34px;
 }
 

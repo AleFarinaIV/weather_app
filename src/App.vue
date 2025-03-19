@@ -2,6 +2,7 @@
 import {store} from "./store.js"
 import {storeCurrent} from "./storeCurrent.js"
 import { storeDaily } from "./storeDaily.js";
+import { storeHourly } from "./storeHourly.js";
 import axios from 'axios'
 import AppHeader from "./components/AppHeader.vue";
 import AppMain from "./components/AppMain.vue";
@@ -28,6 +29,7 @@ export default {
   //   }
   // },
   methods: {
+    // function to get user geolocation
     getGeolocation() {
       if ("geolocation" in navigator) {
         store.loading = true;
@@ -45,6 +47,7 @@ export default {
             this.getCity();
             this.getCurrentWeather();
             this.getDailyWeather()
+            this.getHourlyWeather();
           },
           (error) => {
             store.loading = false;
@@ -60,6 +63,7 @@ export default {
         this.errorMessage = "Geolocation is not supported by your browser.";
       }
     },
+    // function to get city
     getCity() {
       if (store.latitude && store.longitude) {
         // Nominatim API
@@ -133,6 +137,30 @@ export default {
           console.error("Errore nella richiesta API: ", error);
         });
       }
+    },
+    // hourly weather function
+    getHourlyWeather() {
+      if (store.latitude && store.longitude) {
+        console.log("getHourlyWeather chiamata!"); // Per vedere se la funzione parte
+        const apiLocation = `forecast?latitude=${store.latitude}&longitude=${store.longitude}`;
+        const weatherValue = `${store.apiUrl}${apiLocation}${storeHourly.hourlyApi}`;
+        console.log(weatherValue);
+
+        // API call
+        axios.get(weatherValue).then((result) => {
+          console.log("Risultato API:", result);
+          if (result.data) {
+            storeHourly.valueArray = result.data.hourly;
+            storeHourly.unitsArray = result.data.hourly_units;
+            console.log("Dati salvati in storeHourly.valueArray:", storeHourly.valueArray);
+            console.log("Dati salvati in storeHourly.unitsArray:", storeHourly.unitsArray);
+          } else {
+            console.warn("Dati non trovati in result.data:", result.data);
+          }
+        }).catch((error) => {
+          console.error("Errore nella richiesta API: ", error);
+        });
+      }
     }
   },
   data() {
@@ -140,6 +168,7 @@ export default {
       store,
       storeCurrent,
       storeDaily,
+      storeHourly,
       errorMessage: null,
     }
   }
