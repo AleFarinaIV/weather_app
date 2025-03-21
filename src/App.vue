@@ -161,6 +161,10 @@ export default {
           console.error("Errore nella richiesta API: ", error);
         });
       }
+    },
+    isDay() {
+      const isDay = storeCurrent.valueArray.is_day;
+      return isDay
     }
   },
   data() {
@@ -177,25 +181,43 @@ export default {
 
 <template>
 
-  <header>
-    <AppHeader />
-  </header>
-
-  <main>
-    <AppMain />
-  </main>
+  <div :class="isDay() ? 'bg_day' : 'bg_night'">
+    <header>
+      <AppHeader />
+    </header>
+  
+    <main>
+      <AppMain />
+    </main>
+  </div>
 
 </template>
 
 <style>
   @import "./styles/generals.scss";
+
+  .bg_day {
+    background-image: url("./assets/sunny_wallpaper.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .bg_night {
+    background-image: url("./assets/night_wallpaper.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
   header {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 100;
   }
+
   main {
-    margin-top: 60px;
+    padding-top: 60px;
   }
 </style>
