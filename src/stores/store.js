@@ -9,4 +9,11 @@ export const store = reactive({
     city: null,
     country: null,
     dateOnly: null,
-})
+    hourOnly: new Date().getHours(),
+});
+
+function updateHour() {
+    store.hourOnly = new Date().getHours();
+}
+
+setInterval(updateHour, 1800000);

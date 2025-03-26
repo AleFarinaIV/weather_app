@@ -1,8 +1,8 @@
 <script>
-import {store} from "../store.js"
-import {storeCurrent} from "../storeCurrent.js"
-import { storeDaily } from "../storeDaily.js";
-import { storeHourly } from "../storeHourly.js";
+import {store} from "../stores/store.js"
+import {storeCurrent} from "../stores/storeCurrent.js"
+import { storeDaily } from "../stores/storeDaily.js";
+import { storeHourly } from "../stores/storeHourly.js";
 
 export default {
   data() {
@@ -118,8 +118,14 @@ export default {
     getHours() {
       if (!storeHourly.valueArray || !storeHourly.valueArray.time) return [];
 
-      return storeHourly.valueArray.time.map(hour => hour.slice(11,13));
-    }
+      const hours = storeHourly.valueArray.time.map(hour => hour.slice(11,13));
+
+      let startCarousel = store.hourOnly;
+      let endCarousel = startCarousel + 25;
+
+      return hours.slice(startCarousel, endCarousel)
+
+    },
   }
 }
 </script>
@@ -128,70 +134,74 @@ export default {
 
   <div class="container">
     <div class="row p-2">
-
-      <div class="col-12 text-center">
-        <div class="mb-3 rounded-4 text-white">
-          <div class="d-flex flex-column justify-content-between">
-            <!-- <p class="fs-smallest mb-0">{{ store.dateOnly.slice(0,5) }}</p> -->
-            <p class="fs_34 fw-light mb-0">{{ store.city }}</p>
-            <div class="mb-3 mx-2">
-              <p class="m-0 fw-lighter fs_80 px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}&#xb0;</p>
-              <!-- Giorno -->
-              <!-- <h4 v-if="isDay()" class="m-0">
-                <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }}</span>
-                {{ getWeatherIcons(storeCurrent.valueArray.weather_code) }}
-              </h4> -->
-              <!-- Notte -->
-              <h4 class="m-0">
-                <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }} </span>
-                <i class="ms-2 fs-6" :class="getWeatherIcons(storeCurrent.valueArray.weather_code, storeCurrent.valueArray.is_day)"></i>
-              </h4>
-
-              <div v-if="storeDaily.valueArray.temperature_2m_max && storeDaily.valueArray.temperature_2m_max.length > 0">
-                <span>MAX: {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[0]) }}&#xb0; </span><span>MIN: {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[0]) }}&#xb0;</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 py-2 glass_effect rounded-4 text-white mb-3">
-        <div class="border-bottom fs_10">
-          <p class="mb-1">Previsioni della giornata</p>
-        </div>
-        <!-- carosello ora per ora -->
-        <div class="my_carousel d-flex">
-          <div v-if="storeHourly.valueArray.weather_code && storeHourly.valueArray.weather_code.length > 0" 
-            v-for="hour, index in getHours" :key="index" class="me-2">
-            <div class="d-flex flex-column align-items-center me-2">
-              {{ hour }}
-              <i :class="getWeatherIcons(storeHourly.valueArray.weather_code[index])"></i>
-              <p class="m-0">{{ Math.ceil(storeHourly.valueArray.temperature_2m[index]) }}&#xb0;</p>
-            </div>
-          </div>
-          <div v-else>
-            NOPE
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 py-2 glass_effect rounded-4 text-white">
-        <div class="border-bottom fs_10">
-          <p class="mb-1"><i class="bi bi-calendar3"></i> Previsioni per la settimana</p>
-        </div>
-        <div class="row">
-          <div v-for="date, index in formattedDates.slice(1)" :key="index" class="col-4 p-1">
-            <div class="glass_effect rounded-4">
-                <div class="border-bottom d-flex flex-column align-items-center p-0 py-2 text-center">
-                  <p class="m-0">{{ date }}</p>
-                  <i :class="getWeatherIcons(storeDaily.valueArray.weather_code[index + 1])"></i>
-                  <p class="m-0"><i class="bi bi-arrow-up"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[index + 1]) }} <i class="bi bi-arrow-down"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[index + 1]) }}°</p>
+      <div class="col-12 col-md-6">
+        
+        <div class="col-12 text-center">
+          <div class="mb-3 rounded-4 text-white">
+            <div class="d-flex flex-column justify-content-between">
+              <!-- <p class="fs-smallest mb-0">{{ store.dateOnly.slice(0,5) }}</p> -->
+              <p class="fs_34 fw-light mb-0">{{ store.city }}</p>
+              <div class="mb-3 mx-2">
+                <p class="m-0 fw-lighter fs_80 px-3">{{ Math.ceil(storeCurrent.valueArray.temperature_2m) }}&#xb0;</p>
+                <!-- Giorno -->
+                <!-- <h4 v-if="isDay()" class="m-0">
+                  <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }}</span>
+                  {{ getWeatherIcons(storeCurrent.valueArray.weather_code) }}
+                </h4> -->
+                <!-- Notte -->
+                <h4 class="m-0">
+                  <span class="mb-2">{{ getWeatherDescription(storeCurrent.valueArray.weather_code) }} </span>
+                  <i class="ms-2 fs-6" :class="getWeatherIcons(storeCurrent.valueArray.weather_code, storeCurrent.valueArray.is_day)"></i>
+                </h4>
+  
+                <div v-if="storeDaily.valueArray.temperature_2m_max && storeDaily.valueArray.temperature_2m_max.length > 0">
+                  <span>MAX: {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[0]) }}&#xb0; </span><span>MIN: {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[0]) }}&#xb0;</span>
                 </div>
               </div>
+            </div>
           </div>
+        </div>
+  
+        <div class="col-12 py-2 ps-2 glass_effect rounded-4 text-white mb-3">
+          <div class="border-bottom fs_10">
+            <p class="mb-1">Previsioni della giornata</p>
+          </div>
+          <!-- carosello ora per ora -->
+          <div class="my_carousel d-flex">
+            <div v-if="storeHourly.valueArray.weather_code && storeHourly.valueArray.weather_code.length > 0" 
+              v-for="hour, index in getHours" :key="index" class="me-2">
+              <div class="d-flex flex-column align-items-center me-2">
+                <p class="m-0">{{ index == 0 ? 'Adesso' : hour }}</p>
+                <i :class="getWeatherIcons(storeHourly.valueArray.weather_code[index])"></i>
+                <p class="m-0">{{ Math.ceil(storeHourly.valueArray.temperature_2m[index]) }}&#xb0;</p>
+              </div>
+            </div>
+            <div v-else>
+              NOPE
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-12 py-2 px-2 glass_effect rounded-4 text-white">
+          <div class="border-bottom fs_10">
+            <p class="mb-1"><i class="bi bi-calendar3"></i> Previsioni per la settimana</p>
+          </div>
+          <div class="row">
+            <div v-for="date, index in formattedDates.slice(1)" :key="index" class="col-4 p-1">
+              <div class="glass_effect rounded-4">
+                  <div class="border-bottom d-flex flex-column align-items-center p-0 py-2 text-center">
+                    <p class="m-0">{{ date }}</p>
+                    <i :class="getWeatherIcons(storeDaily.valueArray.weather_code[index + 1])"></i>
+                    <p class="m-0"><i class="bi bi-arrow-up"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_max[index + 1]) }} <i class="bi bi-arrow-down"></i> {{ Math.ceil(storeDaily.valueArray.temperature_2m_min[index + 1]) }}°</p>
+                  </div>
+                </div>
+            </div>
+          </div>
+  
         </div>
 
       </div>
+
 
     </div>
   </div>

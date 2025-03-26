@@ -1,8 +1,8 @@
 <script>
-import {store} from "./store.js"
-import {storeCurrent} from "./storeCurrent.js"
-import { storeDaily } from "./storeDaily.js";
-import { storeHourly } from "./storeHourly.js";
+import {store} from "./stores/store.js"
+import {storeCurrent} from "./stores/storeCurrent.js"
+import { storeDaily } from "./stores/storeDaily.js";
+import { storeHourly } from "./stores/storeHourly.js";
 import axios from 'axios'
 import AppHeader from "./components/AppHeader.vue";
 import AppMain from "./components/AppMain.vue";
@@ -14,6 +14,10 @@ export default {
   },
   created() {
     this.getGeolocation();
+  },
+  mounted() {
+    this.fetchWeatherData();
+    setInterval(this.fetchWeatherData, 1800000)
   },
   // watch: {
   //   // Usiamo un watcher per chiamare getCurrentWeather quando cambiano latitudine e longitudine
@@ -29,6 +33,12 @@ export default {
   //   }
   // },
   methods: {
+    // function fetch
+    fetchWeatherData() {
+      this.getCurrentWeather();
+      this.getDailyWeather()
+      this.getHourlyWeather();
+    },
     // function to get user geolocation
     getGeolocation() {
       if ("geolocation" in navigator) {
@@ -45,9 +55,7 @@ export default {
             store.loading = false;
 
             this.getCity();
-            this.getCurrentWeather();
-            this.getDailyWeather()
-            this.getHourlyWeather();
+            this.fetchWeatherData()
           },
           (error) => {
             store.loading = false;
@@ -201,6 +209,10 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+
+    @media screen and (min-width: 768px) {
+      background-position: center;
+    }
   }
 
   .bg_night {
@@ -208,6 +220,10 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+
+    @media screen and (min-width: 768px) {
+      background-position: center;
+    }
   }
 
   header {
